@@ -1,3 +1,5 @@
+# **Videomangled** is a variant of **Videomass** with a bunch of stuff taken out.
+
 # **Videomass** is a cross-platform GUI for FFmpeg and yt-dlp.
 [![Image](https://img.shields.io/static/v1?label=python&logo=python&message=3.7%20|%203.8%20|%203.9%20|%203.10|%203.11&color=blue)](https://www.python.org/downloads/)
 [![Image](https://img.shields.io/badge/license-GPLv3-orange)](https://github.com/jeanslack/Videomass/blob/master/LICENSE)
