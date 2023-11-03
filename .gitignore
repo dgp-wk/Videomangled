@@ -25,3 +25,7 @@ Pipfile.lock
 portable_data
 My_Files
 *~
+/ffmpeg.exe
+/ffplay.exe
+/ffprobe.exe
+/.vs
