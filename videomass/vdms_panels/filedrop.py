@@ -129,11 +129,15 @@ class MyListCtrl(wx.ListCtrl):
         populate the default columns
         """
         self.InsertColumn(0, '#', width=30)
-        self.InsertColumn(1, _('File Name'), width=200)
-        self.InsertColumn(2, _('Duration'), width=200)
-        self.InsertColumn(3, _('Media type'), width=200)
-        self.InsertColumn(4, _('Size'), width=150)
-        self.InsertColumn(5, _('Output file name'), width=200)
+        self.InsertColumn(1, _('File Name'), width=400)
+        self.InsertColumn(2, _('Duration'), width=100)
+        self.InsertColumn(3, _('Codec'), width=75)
+        self.InsertColumn(4, _('Size'), width=75)
+        self.InsertColumn(5, _('Width'), width=75)
+        self.InsertColumn(6, _('Height'), width=75)
+        self.InsertColumn(7, _('Framerate'), width=75)
+        self.InsertColumn(8, _('Pixel Format'), width=100)
+        self.InsertColumn(9, _('Output file name'), width=400)
     # ----------------------------------------------------------------------#
 
     def dropUpdate(self, path, newname=None):
@@ -170,22 +174,49 @@ class MyListCtrl(wx.ListCtrl):
             else:
                 tdur = probe['format']['duration'].split(':')
                 sec, msec = tdur[2].split('.')[0], tdur[2].split('.')[1]
-                tdur = f'{tdur[0]}h : {tdur[1]}m : {sec} : {msec}'
+                tdur = f'{tdur[0]}:{tdur[1]}:{sec}'
                 self.SetItem(self.index, 2, tdur)
                 probe['format']['time'] = probe.get('format').pop('duration')
                 time = get_milliseconds(probe.get('format')['time'])
                 probe['format']['duration'] = time
 
             media = probe['streams'][0]['codec_type']
-            formatname = probe['format']['format_long_name']
-            self.SetItem(self.index, 3, f'{media}: {formatname}')
-            self.SetItem(self.index, 4, probe['format']['size'])
+            formatname = probe['streams'][0]['codec_name']
+            self.SetItem(self.index, 3, f'{formatname}')
+            
+            size = probe['format']['size'].split()
+            if (len(size) == 2):
+                size[0] = round(float(size[0]) * 1.04858,2)
+                size[1] = size[1].replace("ibyte","B")
+                self.SetItem(self.index, 4, f'{size[0]} {size[1]}')
+            else:
+                self.SetItem(self.index, 4, probe['format']['size'])
+            
+               # EDIT:
+            if ('width' in probe['streams'][0]):
+                width = probe['streams'][0]['width']
+                self.SetItem(self.index, 5, f'{width}')
+            if ('height' in probe['streams'][0]):
+                height = probe['streams'][0]['height']
+                self.SetItem(self.index, 6, f'{height}')
+            if ('avg_frame_rate' in probe['streams'][0]):
+                fps = probe['streams'][0]['avg_frame_rate'].split("/")
+                if (len(fps) == 2):
+                    fps[0] = round(float(fps[0])/float(fps[1]),2) 
+                    self.SetItem(self.index, 7, f'{fps[0]} fps')
+                else:
+                    fps = probe['streams'][0]['avg_frame_rate']
+                    self.SetItem(self.index, 7, f'{fps} fps')
+            if ('pix_fmt' in probe['streams'][0]):
+                pixfmt = probe['streams'][0]['pix_fmt']
+                self.SetItem(self.index, 8, f'{pixfmt}')
+                
             if newname:
-                self.SetItem(self.index, 5, newname)
+                self.SetItem(self.index, 9, newname) # EDIT:
                 self.outputnames.append(newname)
             else:
                 fname = os.path.splitext(os.path.basename(path))[0]
-                self.SetItem(self.index, 5, fname)
+                self.SetItem(self.index, 9, fname) # EDIT:
                 self.outputnames.append(fname)
             self.index += 1
             self.data.append(probe)

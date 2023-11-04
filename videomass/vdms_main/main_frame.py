@@ -161,6 +161,7 @@ class MainFrame(wx.Frame):
         self.ConcatDemuxer.Hide()
         self.toPictures.Hide()
         self.toSlideshow.Hide()
+
         # global sizer base
         self.mainSizer = wx.BoxSizer(wx.VERTICAL)
         # Layout external panels:
@@ -192,7 +193,8 @@ class MainFrame(wx.Frame):
         self.sb = self.CreateStatusBar(1)
         self.statusbar_msg(_('Ready'), None)
         # disabling toolbar/menu items
-        [self.toolbar.EnableTool(x, False) for x in (3, 4, 5, 6, 7, 8, 9, 35)]
+        # [self.toolbar.EnableTool(x, False) for x in (3, 4, 5, 6, 7, 8, 9, 35)] # EDIT:
+        [self.toolbar.EnableTool(x, False) for x in (3, 4, 6, 7, 8, 9)]
         self.menu_items(enable=False)
         self.Layout()
         # ---------------------- Binding (EVT) ----------------------#
@@ -201,6 +203,13 @@ class MainFrame(wx.Frame):
 
         pub.subscribe(self.check_modeless_window, "DESTROY_ORPHANED_WINDOWS")
         pub.subscribe(self.process_terminated, "PROCESS TERMINATED")
+        
+        # EDIT: Set starting Panel to Presets Panel
+        self.topicname = 'Presets Manager'
+        self.switch_file_import(self)
+        
+
+
 
     # -------------------Status bar settings--------------------#
 
@@ -233,22 +242,23 @@ class MainFrame(wx.Frame):
         enable or disable some menu items in
         according by showing panels
         """
-        if enable:
-            self.avpan.Enable(True)
-            self.prstpan.Enable(True)
-            self.concpan.Enable(True)
-            self.toseq.Enable(True)
-            self.slides.Enable(True)
-            self.startpan.Enable(True)
-            self.logpan.Enable(True)
-        else:
-            self.avpan.Enable(False)
-            self.prstpan.Enable(False)
-            self.concpan.Enable(False)
-            self.toseq.Enable(False)
-            self.slides.Enable(False)
-            self.startpan.Enable(False)
-            self.logpan.Enable(False)
+        # EDIT: Remove Goto Menu
+        # if enable:
+        #     self.goto_avpan.Enable(True)
+        #     self.goto_prstpan.Enable(True)
+        #     self.goto_concpan.Enable(True)
+        #     self.goto_toseq.Enable(True)
+        #     self.goto_slides.Enable(True)
+        #     self.goto_startpan.Enable(True)
+        #     self.goto_logpan.Enable(True)
+        # else:
+        #     self.goto_avpan.Enable(False)
+        #     self.goto_prstpan.Enable(False)
+        #     self.goto_concpan.Enable(False)
+        #     self.goto_toseq.Enable(False)
+        #     self.goto_slides.Enable(False)
+        #     self.goto_startpan.Enable(False)
+        #     self.goto_logpan.Enable(False)
     # ------------------------------------------------------------------#
 
     def check_modeless_window(self, msg=None):
@@ -514,36 +524,37 @@ class MainFrame(wx.Frame):
         self.menuBar.Append(viewButton, _("View"))
 
         # ------------------ Go menu
-        goButton = wx.Menu()
-        self.startpan = goButton.Append(wx.ID_ANY,
-                                        _("Home panel\tCtrl+Shift+H"),
-                                        _("Go to the 'Home' panel"))
-        goButton.AppendSeparator()
-        self.prstpan = goButton.Append(wx.ID_ANY,
-                                       _("Presets Manager\tCtrl+Shift+P"),
-                                       _("Go to the 'Presets Manager' panel"))
-        self.avpan = goButton.Append(wx.ID_ANY,
-                                     _("A/V Conversions\tCtrl+Shift+V"),
-                                     _("Go to the 'A/V Conversions' panel"))
-        self.concpan = goButton.Append(wx.ID_ANY,
-                                       _("Concatenate Demuxer\tCtrl+Shift+D"),
-                                       _("Go to the 'Concatenate Demuxer' "
-                                         "panel"))
-        self.slides = goButton.Append(wx.ID_ANY,
-                                      _("Still Image Maker\tCtrl+Shift+I"),
-                                      _("Go to the 'Still Image Maker' panel"))
-        self.toseq = goButton.Append(wx.ID_ANY,
-                                     _("From Movie to Pictures\tCtrl+Shift+S"),
-                                     _("Go to the 'From Movie to Pictures' "
-                                       "panel"))
-        self.winytdlp = goButton.Append(wx.ID_ANY,
-                                        _("YouTube Downloader\tCtrl+Shift+Y"),
-                                        _("Open 'YouTube Downloader' window"))
-        goButton.AppendSeparator()
-        dscrp = (_("Output Monitor\tCtrl+Shift+O"),
-                 _("Keeps track of the output for debugging errors"))
-        self.logpan = goButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
-        self.menuBar.Append(goButton, _("Goto"))
+        # EDIT: Remove Goto Menu
+        # goButton = wx.Menu()
+        # self.goto_startpan = goButton.Append(wx.ID_ANY,
+        #                                 _("Home panel\tCtrl+Shift+H"),
+        #                                 _("Go to the 'Home' panel"))
+        # goButton.AppendSeparator()
+        # self.goto_prstpan = goButton.Append(wx.ID_ANY,
+        #                                _("Presets Manager\tCtrl+Shift+P"),
+        #                                _("Go to the 'Presets Manager' panel"))
+        # self.goto_avpan = goButton.Append(wx.ID_ANY,
+        #                              _("A/V Conversions\tCtrl+Shift+V"),
+        #                              _("Go to the 'A/V Conversions' panel"))
+        # self.goto_concpan = goButton.Append(wx.ID_ANY,
+        #                                _("Concatenate Demuxer\tCtrl+Shift+D"),
+        #                                _("Go to the 'Concatenate Demuxer' "
+        #                                  "panel"))
+        # self.goto_slides = goButton.Append(wx.ID_ANY,
+        #                               _("Still Image Maker\tCtrl+Shift+I"),
+        #                               _("Go to the 'Still Image Maker' panel"))
+        # self.goto_toseq = goButton.Append(wx.ID_ANY,
+        #                              _("From Movie to Pictures\tCtrl+Shift+S"),
+        #                              _("Go to the 'From Movie to Pictures' "
+        #                                "panel"))
+        # self.goto_winytdlp = goButton.Append(wx.ID_ANY,
+        #                                 _("YouTube Downloader\tCtrl+Shift+Y"),
+        #                                 _("Open 'YouTube Downloader' window"))
+        # goButton.AppendSeparator()
+        # dscrp = (_("Output Monitor\tCtrl+Shift+O"),
+        #          _("Keeps track of the output for debugging errors"))
+        # self.goto_logpan = goButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
+        # self.menuBar.Append(goButton, ("Goto"))
 
         # ------------------ setup menu
         setupButton = wx.Menu()
@@ -638,14 +649,15 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.View_logs, viewlogs)
         self.Bind(wx.EVT_MENU, self.view_Timeline, self.viewtimeline)
         # ---- GO -----
-        self.Bind(wx.EVT_MENU, self.startPanel, self.startpan)
-        self.Bind(wx.EVT_MENU, self.switch_presets_manager, self.prstpan)
-        self.Bind(wx.EVT_MENU, self.switch_av_conversions, self.avpan)
-        self.Bind(wx.EVT_MENU, self.switch_concat_demuxer, self.concpan)
-        self.Bind(wx.EVT_MENU, self.switch_slideshow_maker, self.slides)
-        self.Bind(wx.EVT_MENU, self.switch_video_to_pictures, self.toseq)
-        self.Bind(wx.EVT_MENU, self.logPan, self.logpan)
-        self.Bind(wx.EVT_MENU, self.youtubedl, self.winytdlp)
+        # EDIT: Remove Goto Menu
+        # self.Bind(wx.EVT_MENU, self.startPanel, self.goto_startpan)
+        # self.Bind(wx.EVT_MENU, self.switch_presets_manager, self.goto_prstpan)
+        # self.Bind(wx.EVT_MENU, self.switch_av_conversions, self.goto_avpan)
+        # self.Bind(wx.EVT_MENU, self.switch_concat_demuxer, self.goto_concpan)
+        # self.Bind(wx.EVT_MENU, self.switch_slideshow_maker, self.goto_slides)
+        # # self.Bind(wx.EVT_MENU, self.switch_video_to_pictures, self.goto_toseq)
+        # self.Bind(wx.EVT_MENU, self.logPan, self.goto_logpan)
+        # self.Bind(wx.EVT_MENU, self.youtubedl, self.goto_winytdlp)
         # ----SETUP----
         self.Bind(wx.EVT_MENU, self.on_destpath_setup, path_dest)
         self.Bind(wx.EVT_MENU, self.on_Resetfolders_tmp, self.resetfolders_tmp)
@@ -1260,21 +1272,18 @@ class MainFrame(wx.Frame):
                                        bmpnext,
                                        tip, wx.ITEM_NORMAL
                                        )
-        tip = _("Go to the 'Home' panel")
-        home = self.toolbar.AddTool(5, _('Home'),
-                                    bmphome,
-                                    tip, wx.ITEM_NORMAL
-                                    )
-        tip = _("Play the selected file in the list")
-        play = self.toolbar.AddTool(35, _('Play'),
-                                    bmpplay,
-                                    tip, wx.ITEM_NORMAL
-                                    )
-        tip = _("Get informative data about imported media streams")
-        self.btn_streams = self.toolbar.AddTool(6, _('Properties'),
-                                                bmpinfo,
-                                                tip, wx.ITEM_NORMAL
-                                                )
+        # EDIT: Remove Home Button.
+        # tip = _("Go to the 'Home' panel")
+        # home = self.toolbar.AddTool(5, _('Home'),
+        #                             bmphome,
+        #                             tip, wx.ITEM_NORMAL
+        #                             )
+        # EDIT: Remove Play Button
+        # tip = _("Play the selected file in the list")
+        # play = self.toolbar.AddTool(35, _('Play'),
+        #                             bmpplay,
+        #                             tip, wx.ITEM_NORMAL
+        #                             )
         tip = _("Start rendering")
         self.run_coding = self.toolbar.AddTool(7, _('Run'),
                                                bmpconv,
@@ -1290,17 +1299,22 @@ class MainFrame(wx.Frame):
                                      bmpclear,
                                      tip, wx.ITEM_NORMAL
                                      )
+        tip = _("Get informative data about imported media streams")
+        self.btn_streams = self.toolbar.AddTool(6, _('Properties'),
+                                                bmpinfo,
+                                                tip, wx.ITEM_NORMAL
+                                                )
         self.toolbar.Realize()
 
         # ----------------- Tool Bar Binding (evt)-----------------------#
-        self.Bind(wx.EVT_TOOL, self.startPanel, home)
+        # self.Bind(wx.EVT_TOOL, self.startPanel, home) # EDIT:
         self.Bind(wx.EVT_TOOL, self.fileDnDTarget.delete_all, clear)
         self.Bind(wx.EVT_TOOL, self.click_start, self.run_coding)
         self.Bind(wx.EVT_TOOL, self.click_stop, stop_coding)
         self.Bind(wx.EVT_TOOL, self.on_Back, back)
         self.Bind(wx.EVT_TOOL, self.on_Forward, forward)
         self.Bind(wx.EVT_TOOL, self.media_streams, self.btn_streams)
-        self.Bind(wx.EVT_TOOL, self.fileDnDTarget.on_play_select, play)
+        # self.Bind(wx.EVT_TOOL, self.fileDnDTarget.on_play_select, play) # EDIT:
 
     # --------------- Tool Bar Callback (event handler) -----------------#
 
@@ -1363,7 +1377,8 @@ class MainFrame(wx.Frame):
         elif self.toSlideshow.IsShown():
             self.toSlideshow.Hide()
 
-        [self.toolbar.EnableTool(x, False) for x in (3, 4, 5, 6, 7, 8, 9, 35)]
+        # [self.toolbar.EnableTool(x, False) for x in (3, 4, 5, 6, 7, 8, 9, 35)]
+        [self.toolbar.EnableTool(x, False) for x in (3, 4, 6, 7, 8, 9)] # EDIT : Remove Toolbar Items
         self.ChooseTopic.Show()
         self.openmedia.Enable(False)
         self.menu_items(enable=False)
@@ -1392,15 +1407,20 @@ class MainFrame(wx.Frame):
         self.delfile.Enable(True)
         self.openmedia.Enable(True)
         if self.file_src:
-            [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 9, 35)]
+            # [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 9, 35)]  # EDIT : Remove Toolbar Items
+            [self.toolbar.EnableTool(x, True) for x in (3, 4, 6, 9)]
             [self.toolbar.EnableTool(x, False) for x in (7, 8)]
         else:
-            [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 35)]
+            # [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 35)]  # EDIT : Remove Toolbar Items
+            [self.toolbar.EnableTool(x, True) for x in (3, 4, 6)]
             [self.toolbar.EnableTool(x, False) for x in (7, 8, 9)]
         self.toolbar.Realize()
         self.Layout()
         self.statusbar_msg(_('Ready'), None)
         self.SetTitle(_('Videomass - Queued Files'))
+
+        # Edit: Prevent toolbar from backing into the topic picker.
+        self.toolbar.EnableTool(3, False)
     # ------------------------------------------------------------------#
 
     def switch_av_conversions(self, event):
@@ -1421,8 +1441,9 @@ class MainFrame(wx.Frame):
         self.menu_items(enable=True)  # enable all menu items
         self.delfile.Enable(False)
         self.openmedia.Enable(True)
-        self.avpan.Enable(False)
-        [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 7, 35)]
+        # self.goto_avpan.Enable(False) # EDIT: Remove Goto Menu
+        # [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 7, 35)] # EDIT: Remove toolbar items.
+        [self.toolbar.EnableTool(x, True) for x in (3, 4, 6, 7)]
         [self.toolbar.EnableTool(x, False) for x in (8, 9)]
         self.Layout()
     # ------------------------------------------------------------------#
@@ -1445,8 +1466,9 @@ class MainFrame(wx.Frame):
         self.menu_items(enable=True)  # enable all menu items
         self.delfile.Enable(False)
         self.openmedia.Enable(True)
-        self.prstpan.Enable(False)
-        [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 7, 35)]
+        # self.goto_prstpan.Enable(False) # EDIT: Remove Goto Menu
+        # [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 7, 35)] # EDIT:
+        [self.toolbar.EnableTool(x, True) for x in (3, 4, 6, 7)]
         [self.toolbar.EnableTool(x, False) for x in (8, 9)]
         self.Layout()
         self.PrstsPanel.update_preset_state()
@@ -1470,8 +1492,9 @@ class MainFrame(wx.Frame):
         self.menu_items(enable=True)  # enable all menu items
         self.delfile.Enable(False)
         self.openmedia.Enable(True)
-        self.concpan.Enable(False)
-        [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 7, 35)]
+        # self.goto_concpan.Enable(False) # EDIT: Remove Goto Menu
+        #[self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 7, 35)]
+        [self.toolbar.EnableTool(x, True) for x in (3, 4, 6, 7)]
         [self.toolbar.EnableTool(x, False) for x in (8, 9)]
         self.Layout()
     # ------------------------------------------------------------------#
@@ -1494,8 +1517,9 @@ class MainFrame(wx.Frame):
         self.menu_items(enable=True)  # enable all menu items
         self.delfile.Enable(False)
         self.openmedia.Enable(True)
-        self.toseq.Enable(False)
-        [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 7, 35)]
+        # self.goto_toseq.Enable(False) # EDIT: Remove Goto Menu
+        # [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 7, 35)] # EDIT:
+        [self.toolbar.EnableTool(x, True) for x in (3, 4, 6, 7)]
         [self.toolbar.EnableTool(x, False) for x in (8, 9)]
         self.Layout()
     # ------------------------------------------------------------------#
@@ -1518,8 +1542,9 @@ class MainFrame(wx.Frame):
         self.menu_items(enable=True)  # enable all menu items
         self.delfile.Enable(False)
         self.openmedia.Enable(True)
-        self.slides.Enable(False)
-        [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 7, 35)]
+        # self.goto_slides.Enable(False) # EDIT: Remove Goto Menu
+        # [self.toolbar.EnableTool(x, True) for x in (3, 4, 5, 6, 7, 35)] # EDIT:
+        [self.toolbar.EnableTool(x, True) for x in (3, 4, 6, 7)]
         [self.toolbar.EnableTool(x, False) for x in (8, 9)]
         self.Layout()
     # ------------------------------------------------------------------#
@@ -1556,8 +1581,9 @@ class MainFrame(wx.Frame):
             self.menu_items(enable=False)  # disable menu items
             self.openmedia.Enable(False)
             [self.toolbar.EnableTool(x, True) for x in (6, 8)]
-            [self.toolbar.EnableTool(x, False) for x in (3, 5)]
-        self.logpan.Enable(False)
+            # [self.toolbar.EnableTool(x, False) for x in (3, 5)] # EDIT:
+            self.toolbar.EnableTool(3, False)
+        # self.goto_logpan.Enable(False) # EDIT: Remove Goto Menu.
         [self.toolbar.EnableTool(x, False) for x in (4, 7, 9)]
 
         self.ProcessPanel.topic_thread(self.topicname, dur, seq, *args)
@@ -1602,7 +1628,8 @@ class MainFrame(wx.Frame):
         """
         self.menu_items(enable=True)  # enable all menu items
         self.openmedia.Enable(False)
-        [self.toolbar.EnableTool(x, True) for x in (3, 5)]
+        # [self.toolbar.EnableTool(x, True) for x in (3, 5)] # EDIT:
+        self.toolbar.EnableTool(3, True)
         self.toolbar.EnableTool(8, False)
 
         if self.emptylist:
@@ -1614,7 +1641,7 @@ class MainFrame(wx.Frame):
         Closing the `long_processing_task` panel, retrieval at previous
         panel shown (see `switch_to_processing` method above).
         """
-        self.logpan.Enable(True)  # menu item
+        # self.goto_logpan.Enable(True)  # menu item  # EDIT: Remove Goto Menu.
         self.ProcessPanel.Hide()
         if panelshown == 'Audio/Video Conversions':
             self.switch_av_conversions(self)

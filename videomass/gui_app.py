@@ -230,7 +230,8 @@ def main():
     wx.App mainloop with default keyword arguments.
     """
     if not sys.argv[1:]:
-        kwargs = {'make_portable': None}
+        data = os.path.join(os.path.dirname(sys.executable), 'portable_data')
+        kwargs = {'make_portable': data}
     else:
         kwargs = arguments()
 
