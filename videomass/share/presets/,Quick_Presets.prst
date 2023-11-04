@@ -1,0 +1,18 @@
+[
+    {
+        "Name": "HAP Alpha",
+        "Description": "Encodes clips to HAP Alpha.",
+        "First_pass": "-c:v hap -format hap_alpha -compressor snappy -chunks 8",
+        "Second_pass": "",
+        "Supported_list": "mov,mkv,mp4",
+        "Output_extension": "mov"
+    },
+    {
+        "Name": "HAP Q",
+        "Description": "Converts a file to HAP Q. No alpha channel is preserved.",
+        "First_pass": "-c:v hap -format hap_q -compressor snappy -chunks 8",
+        "Second_pass": "",
+        "Supported_list": "mov,mkv,mp4",
+        "Output_extension": "mov"
+    }
+]

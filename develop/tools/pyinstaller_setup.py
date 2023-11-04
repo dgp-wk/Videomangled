@@ -97,17 +97,17 @@ class PyinstallerSpec():
         self.getdata = videomass_data_source()
         sep = ';' if platform.system() == 'Windows' else ':'
 
-        self.datas = (f"--add-data {self.getdata['ART']}{sep}art "
-                      f"--add-data {self.getdata['LOCALE']}{sep}locale "
-                      f"--add-data {self.getdata['SHARE']}{sep}share "
-                      f"--add-data {self.getdata['FFMPEG']}{sep}FFMPEG "
-                      f"--add-data {self.getdata['AUTH']}{sep}DOC "
-                      f"--add-data {self.getdata['BUGS']}{sep}DOC "
-                      f"--add-data {self.getdata['CHANGELOG']}{sep}DOC "
-                      f"--add-data {self.getdata['COPYING']}{sep}DOC "
-                      f"--add-data {self.getdata['INSTALL']}{sep}DOC "
-                      f"--add-data {self.getdata['README']}{sep}DOC "
-                      f"--add-data {self.getdata['TODO']}{sep}DOC "
+        self.datas = (f"--add-data \"{self.getdata['ART']}\"{sep}art "
+                      f"--add-data \"{self.getdata['LOCALE']}\"{sep}locale "
+                      f"--add-data \"{self.getdata['SHARE']}\"{sep}share "
+                      f"--add-data \"{self.getdata['FFMPEG']}\"{sep}FFMPEG "
+                      f"--add-data \"{self.getdata['AUTH']}\"{sep}DOC "
+                      f"--add-data \"{self.getdata['BUGS']}\"{sep}DOC "
+                      f"--add-data \"{self.getdata['CHANGELOG']}\"{sep}DOC "
+                      f"--add-data \"{self.getdata['COPYING']}\"{sep}DOC "
+                      f"--add-data \"{self.getdata['INSTALL']}\"{sep}DOC "
+                      f"--add-data \"{self.getdata['README']}\"{sep}DOC "
+                      f"--add-data \"{self.getdata['TODO']}\"{sep}DOC "
                       )
     # ---------------------------------------------------------#
 
@@ -117,7 +117,7 @@ class PyinstallerSpec():
         on MS-Windows platform.
         """
         options = (f"--name {self.getdata['RLS_NAME']} {self.onedf} "
-                   f"--windowed --noconsole --icon {self.getdata['ICO']} "
+                   f"--windowed --noconsole --icon \"{self.getdata['ICO']}\" "
                    # f"--exclude-module 'yt_dlp' "
                    f"{self.datas} ")
 
