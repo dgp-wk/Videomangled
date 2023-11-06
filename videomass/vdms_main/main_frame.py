@@ -473,20 +473,20 @@ class MainFrame(wx.Frame):
         self.delfile.Enable(False)
 
         # ------------------ tools menu
-        toolsButton = wx.Menu()
-        dscrp = (_("Find FFmpeg topics and options"),
-                 _("A useful tool to search for FFmpeg help topics and "
-                   "options"))
-        searchtopic = toolsButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
-        toolsButton.AppendSeparator()
-        prstpage = '<https://github.com/jeanslack/Videomass-presets>'
-        dscrp = (_("Check for preset updates"),
-                 _("Check for new presets updates from {0}").format(prstpage))
-        self.prstcheck = toolsButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
-        dscrp = (_("Get the latest presets"),
-                 _("Get the latest presets from {0}").format(prstpage))
-        self.prstdownload = toolsButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
-        self.menuBar.Append(toolsButton, _("Tools"))
+        # toolsButton = wx.Menu()
+        # dscrp = (_("Find FFmpeg topics and options"),
+        #          _("A useful tool to search for FFmpeg help topics and "
+        #            "options"))
+        # searchtopic = toolsButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
+        # toolsButton.AppendSeparator()
+        # prstpage = '<https://github.com/jeanslack/Videomass-presets>'
+        # dscrp = (_("Check for preset updates"),
+        #          _("Check for new presets updates from {0}").format(prstpage))
+        # self.prstcheck = toolsButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
+        # dscrp = (_("Get the latest presets"),
+        #          _("Get the latest presets from {0}").format(prstpage))
+        # self.prstdownload = toolsButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
+        # self.menuBar.Append(toolsButton, _("Tools"))
 
         # ------------------ View menu
         viewButton = wx.Menu()
@@ -569,27 +569,27 @@ class MainFrame(wx.Frame):
         self.resetfolders_tmp = setupButton.Append(wx.ID_ANY, dscrp[0],
                                                    dscrp[1])
         self.resetfolders_tmp.Enable(False)
-        setupButton.AppendSeparator()
-        dscrp = (_("Display timestamps during playback"),
-                 _("Displays timestamp when playing media with FFplay"))
-        self.viewtimestamp = setupButton.Append(wx.ID_ANY, dscrp[0], dscrp[1],
-                                                kind=wx.ITEM_CHECK)
-        dscrp = (_("Auto-exit after playback"),
-                 _("If checked, the FFplay window will auto-close "
-                   "when playback is complete"))
-        self.exitplayback = setupButton.Append(wx.ID_ANY, dscrp[0], dscrp[1],
-                                               kind=wx.ITEM_CHECK)
-        dscrp = (_("FFplay timestamp settings"),
-                 _("Change the size and color of the timestamp "
-                   "during playback"))
-        tscustomize = setupButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
-        setupButton.AppendSeparator()
+        # setupButton.AppendSeparator()
+        # dscrp = (_("Display timestamps during playback"),
+        #          _("Displays timestamp when playing media with FFplay"))
+        # self.viewtimestamp = setupButton.Append(wx.ID_ANY, dscrp[0], dscrp[1],
+        #                                         kind=wx.ITEM_CHECK)
+        # dscrp = (_("Auto-exit after playback"),
+        #          _("If checked, the FFplay window will auto-close "
+        #            "when playback is complete"))
+        # self.exitplayback = setupButton.Append(wx.ID_ANY, dscrp[0], dscrp[1],
+        #                                        kind=wx.ITEM_CHECK)
+        # dscrp = (_("FFplay timestamp settings"),
+        #          _("Change the size and color of the timestamp "
+        #            "during playback"))
+        # tscustomize = setupButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
+        # setupButton.AppendSeparator()
         setupItem = setupButton.Append(wx.ID_PREFERENCES,
                                        _("Preferences\tCtrl+P"),
                                        _("Application preferences"))
         self.menuBar.Append(setupButton, _("Settings"))
-        self.menuBar.Check(self.exitplayback.GetId(), self.autoexit)
-        self.menuBar.Check(self.viewtimestamp.GetId(), True)
+        # self.menuBar.Check(self.exitplayback.GetId(), self.autoexit)
+        # self.menuBar.Check(self.viewtimestamp.GetId(), True)
 
         # ------------------ help menu
         helpButton = wx.Menu()
@@ -600,15 +600,19 @@ class MainFrame(wx.Frame):
         helpButton.AppendSeparator()
         transItem = helpButton.Append(wx.ID_ANY, _('Translation...'), '')
         helpButton.AppendSeparator()
-        DonationItem = helpButton.Append(wx.ID_ANY, _("Donation"), "")
-        helpButton.AppendSeparator()
+        # DonationItem = helpButton.Append(wx.ID_ANY, _("Donation"), "")
+        # helpButton.AppendSeparator()
         docFFmpeg = helpButton.Append(wx.ID_ANY, _("FFmpeg documentation"), "")
+        dscrp = (_("Find FFmpeg topics and options"),
+                 _("A useful tool to search for FFmpeg help topics and "
+                   "options"))
+        searchtopic = helpButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
         helpButton.AppendSeparator()
-        dscrp = (_("Check for newer version"),
-                 _("Check for the latest Videomass version at "
-                   "<https://pypi.org/project/videomass/>"))
-        checkItem = helpButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
-        helpButton.AppendSeparator()
+        # dscrp = (_("Check for newer version"),
+        #          _("Check for the latest Videomass version at "
+        #            "<https://pypi.org/project/videomass/>"))
+        # checkItem = helpButton.Append(wx.ID_ANY, dscrp[0], dscrp[1])
+        # helpButton.AppendSeparator()
         dscrp = (_("System version"),
                  _("Get version about your operating system, version of "
                    "Python and wxPython."))
@@ -635,17 +639,17 @@ class MainFrame(wx.Frame):
                   self.delfile)
         # ----TOOLS----
         self.Bind(wx.EVT_MENU, self.Search_topic, searchtopic)
-        self.Bind(wx.EVT_MENU, self.prst_downloader, self.prstdownload)
-        self.Bind(wx.EVT_MENU, self.prst_checkversion, self.prstcheck)
+        # self.Bind(wx.EVT_MENU, self.prst_downloader, self.prstdownload)
+        # self.Bind(wx.EVT_MENU, self.prst_checkversion, self.prstcheck)
         # ---- VIEW ----
         self.Bind(wx.EVT_MENU, self.get_ffmpeg_conf, checkconf)
         self.Bind(wx.EVT_MENU, self.get_ffmpeg_formats, ckformats)
         self.Bind(wx.EVT_MENU, self.get_ffmpeg_codecs, ckcoders)
         self.Bind(wx.EVT_MENU, self.get_ffmpeg_decoders, ckdecoders)
         self.Bind(wx.EVT_MENU, self.durinPlayng, playing)
-        self.Bind(wx.EVT_MENU, self.showTimestamp, self.viewtimestamp)
-        self.Bind(wx.EVT_MENU, self.timestampCustomize, tscustomize)
-        self.Bind(wx.EVT_MENU, self.autoexitFFplay, self.exitplayback)
+        # self.Bind(wx.EVT_MENU, self.showTimestamp, self.viewtimestamp)
+        # self.Bind(wx.EVT_MENU, self.timestampCustomize, tscustomize)
+        # self.Bind(wx.EVT_MENU, self.autoexitFFplay, self.exitplayback)
         self.Bind(wx.EVT_MENU, self.View_logs, viewlogs)
         self.Bind(wx.EVT_MENU, self.view_Timeline, self.viewtimeline)
         # ---- GO -----
@@ -655,7 +659,7 @@ class MainFrame(wx.Frame):
         # self.Bind(wx.EVT_MENU, self.switch_av_conversions, self.goto_avpan)
         # self.Bind(wx.EVT_MENU, self.switch_concat_demuxer, self.goto_concpan)
         # self.Bind(wx.EVT_MENU, self.switch_slideshow_maker, self.goto_slides)
-        # # self.Bind(wx.EVT_MENU, self.switch_video_to_pictures, self.goto_toseq)
+        # self.Bind(wx.EVT_MENU, self.switch_video_to_pictures, self.goto_toseq)
         # self.Bind(wx.EVT_MENU, self.logPan, self.goto_logpan)
         # self.Bind(wx.EVT_MENU, self.youtubedl, self.goto_winytdlp)
         # ----SETUP----
@@ -667,9 +671,9 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.Wiki, wikiItem)
         self.Bind(wx.EVT_MENU, self.Issues, issueItem)
         self.Bind(wx.EVT_MENU, self.Translations, transItem)
-        self.Bind(wx.EVT_MENU, self.Donation, DonationItem)
+        # self.Bind(wx.EVT_MENU, self.Donation, DonationItem)
         self.Bind(wx.EVT_MENU, self.DocFFmpeg, docFFmpeg)
-        self.Bind(wx.EVT_MENU, self.CheckNewReleases, checkItem)
+        # self.Bind(wx.EVT_MENU, self.CheckNewReleases, checkItem)
         self.Bind(wx.EVT_MENU, self.system_vers, sysinfo)
         self.Bind(wx.EVT_MENU, self.Info, infoItem)
     # --------Menu Bar Event handler (callback)
@@ -1043,10 +1047,10 @@ class MainFrame(wx.Frame):
         FFplay submenu: enable filter for view timestamp with ffplay
 
         """
-        if self.viewtimestamp.IsChecked():
-            self.checktimestamp = True
-        else:
-            self.checktimestamp = False
+        # if self.viewtimestamp.IsChecked():
+        #     self.checktimestamp = True
+        # else:
+        #     self.checktimestamp = False
     # ------------------------------------------------------------------#
 
     def timestampCustomize(self, event):
@@ -1069,7 +1073,7 @@ class MainFrame(wx.Frame):
         autoexit at the end of playback
 
         """
-        self.autoexit = self.exitplayback.IsChecked()
+        # self.autoexit = self.exitplayback.IsChecked()
     # ------------------------------------------------------------------#
 
     def Setup(self, event):

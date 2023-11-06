@@ -60,7 +60,8 @@ def aboutdlg(parent, videomass_icon):
     info.SetName(f"{name_upper}")
     info.SetVersion(f"v{version}")
     info.SetDescription(_("Cross-platform graphical user interface for FFmpeg "
-                          "and yt-dlp.\n"))
+                          "and yt-dlp.\n\n"
+                          "Videomangled: With modifications.\n"))
     info.SetCopyright(f"Copyright {copyr} {author[0]} {author[1]}")
     info.SetWebSite(website)
     info.SetLicence(long_lic)
