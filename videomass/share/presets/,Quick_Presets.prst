@@ -1,17 +1,118 @@
 [
     {
-        "Name": "HAP Alpha",
-        "Description": "Encodes clips to HAP Alpha.",
-        "First_pass": "-c:v hap -format hap_alpha -compressor snappy -chunks 8",
-        "Second_pass": "",
+        "Name": "Full-Width",
+        "Description": "",
+        "Passes": [],
+        "Supported_list": "",
+        "Output_extension": ""
+    },
+    {
+        "Name": "        HAP Alpha",
+        "Description": "Use on clips with alpha effects. Renders a single full-width clip.",
+        "Passes": [
+            [ "-c:v hap -format hap_alpha -compressor snappy -chunks 8", "_HAPA" ]
+        ],
+        "Supported_list": "mov,mkv,mp4,png",
+        "Output_extension": "mov"
+    },
+    {
+        "Name": "        HAP Q",
+        "Description": "Use on clips without alpha effects. Renders a single full-width clip.",
+        "Passes": [
+            [ "-c:v hap -format hap_q -compressor snappy -chunks 8", "_HAPQ" ]
+        ],
         "Supported_list": "mov,mkv,mp4",
         "Output_extension": "mov"
     },
     {
-        "Name": "HAP Q",
-        "Description": "Converts a file to HAP Q. No alpha channel is preserved.",
-        "First_pass": "-c:v hap -format hap_q -compressor snappy -chunks 8",
-        "Second_pass": "",
+        "Name": "7-Width Splits",
+        "Description": "",
+        "Passes": [],
+        "Supported_list": "",
+        "Output_extension": ""
+    },
+    {
+        "Name": "        HAP Alpha 7-Split (5-Left, 5-Right)",
+        "Description": "Use on clips with alpha effects. Renders a 5-of-7 slice left clip , a right clip, and a full-width clip.",
+        "Passes": [
+            [ "-c:v hap -format hap_alpha -compressor snappy -chunks 8", "_FULLWIDE_HAPA" ],
+            [ "-filter:v crop=19200:2400:0:0 -c:v hap -format hap_alpha -compressor snappy -chunks 8", "_LEFT_HAPA" ],
+            [ "-filter:v crop=19200:2400:7680:0 -c:v hap -format hap_alpha -compressor snappy -chunks 8", "_RIGHT_HAPA" ]
+        ],
+        "Supported_list": "mov,mkv,mp4",
+        "Output_extension": "mov"
+    },
+    {
+        "Name": "        HAP Q 7-Split (5-Left, 5-Right)",
+        "Description": "Use on clips without alpha effects. Renders a 5-of-7 slice left clip , a right clip, and a full-width clip.",
+        "Passes": [
+            [ "-c:v hap -format hap_q -compressor snappy -chunks 8", "_FULLWIDE_HAPQ" ],
+            [ "-filter:v crop=19200:2400:0:0 -c:v hap -format hap_q -compressor snappy -chunks 8", "_LEFT_HAPQ" ],
+            [ "-filter:v crop=19200:2400:7680:0 -c:v hap -format hap_q -compressor snappy -chunks 8", "_RIGHT_HAPQ" ]
+        ],
+        "Supported_list": "mov,mkv,mp4",
+        "Output_extension": "mov"
+    },
+    {
+        "Name": "5-Width Splits",
+        "Description": "",
+        "Passes": [],
+        "Supported_list": "",
+        "Output_extension": ""
+    },
+    {
+        "Name": "        HAP Alpha 5-Split (4-Left, 4-Right)",
+        "Description": "Use on clips with alpha effects. Renders a 4-of-5 slice left clip , a right clip, and a full-width clip.",
+        "Passes": [
+            [ "-c:v hap -format hap_alpha -compressor snappy -chunks 8", "_FULLWIDE_HAPA" ],
+            [ "-filter:v crop=15360:2400:0:0 -c:v hap -format hap_alpha -compressor snappy -chunks 8", "_LEFT_HAPA" ],
+            [ "-filter:v crop=15360:2400:3840:0 -c:v hap -format hap_alpha -compressor snappy -chunks 8", "_RIGHT_HAPA" ]
+        ],
+        "Supported_list": "mov,mkv,mp4",
+        "Output_extension": "mov"
+    },
+    {
+        "Name": "        HAP Q 5-Split (4-Left, 4-Right)",
+        "Description": "Use on clips without alpha effects. Renders a 4-of-5 slice left clip , a right clip, and a full-width clip.",
+        "Passes": [
+            [ "-c:v hap -format hap_q -compressor snappy -chunks 8", "_FULLWIDE_HAPQ" ],
+            [ "-filter:v crop=15360:2400:0:0 -c:v hap -format hap_q -compressor snappy -chunks 8", "_LEFT_HAPQ" ],
+            [ "-filter:v crop=15360:2400:3840:0 -c:v hap -format hap_q -compressor snappy -chunks 8", "_RIGHT_HAPQ" ]
+        ],
+        "Supported_list": "mov,mkv,mp4",
+        "Output_extension": "mov"
+    },
+    {
+        "Name": "Utilities",
+        "Description": "",
+        "Passes": [],
+        "Supported_list": "",
+        "Output_extension": ""
+    },
+    {
+        "Name": "        To TIFF",
+        "Description": "Renders a TIFF from the source file. If a video, makes a TIFF image for *every frame*. Can get big.",
+        "Passes": [
+            [ "", "" ]
+        ],
+        "Supported_list": "mov,mkv,mp4,png,jpg,bmp,dds,gif",
+        "Output_extension": "tiff"
+    },
+    {
+        "Name": "        Bake In Color Temperature (HAP A)",
+        "Description": "Bakes a color temperature into a clip. Edit the values in the text box below.",
+        "Passes": [
+            [ "-vf colortemperature=temperature=6500 -c:v hap -format hap_alpha -compressor snappy -chunks 8", "_6500K_HAPA" ]
+        ],
+        "Supported_list": "mov,mkv,mp4",
+        "Output_extension": "mov"
+    },
+    {
+        "Name": "        Bake In Color Temperature (HAP Q)",
+        "Description": "Bakes a color temperature into a clip. Edit the values in the text box below.",
+        "Passes": [
+            [ "-vf colortemperature=temperature=6500 -c:v hap -format hap_q -compressor snappy -chunks 8", "_6500K_HAPQ" ]
+        ],
         "Supported_list": "mov,mkv,mp4",
         "Output_extension": "mov"
     }
