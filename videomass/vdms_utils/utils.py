@@ -246,6 +246,8 @@ def get_milliseconds(timeformat):
     hours, minutes, seconds = (["0", "0"] + timeformat.split(":"))[-3:]
     hours = int(hours)
     minutes = int(minutes)
+    if (seconds == 'N/A'):
+        seconds = 0
     seconds = float(seconds)
 
     return int(hours * 3600000 + minutes * 60000 + seconds * 1000)

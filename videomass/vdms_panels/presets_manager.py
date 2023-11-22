@@ -27,6 +27,8 @@ This file is part of Videomass.
 """
 import os
 import sys
+import json
+import pprint
 import wx
 import wx.lib.scrolledpanel as scrolled
 from videomass.vdms_utils.get_bmpfromsvg import get_bmp
@@ -67,16 +69,14 @@ class PrstPan(wx.Panel):
         """
         Each presets is a JSON file (Javascript object notation) which is
         a list object with a variable number of items (called profiles)
-        of type <class 'dict'>, each of which collect 5 keys object in
-        the following form:
+        of type <class 'dict'>, each of which collects a handful of elements:
 
-        {'Name': "",
-        "Descritpion": "",
-        "First_pass": "",
-        "Second_pass": "",
+        [{'Name': "",
+        "Description": "",
+        "Passes": [["ffmpeg args","suffix","TODO Subdirectory"]],
         "Supported_list": "",
         "Output_extension": "",
-        }
+        }]
         """
         if 'wx.svg' in sys.modules:  # available only in wx version 4.1 to up
             bmpnewprf = get_bmp(icons['profile_add'], ((16, 16)))
@@ -118,82 +118,82 @@ class PrstPan(wx.Panel):
                                      )
         boxpresets.Add(self.cmbx_prst, 0, wx.ALL | wx.EXPAND, 5)
         boxpresets.Add((5, 5))
-        line0 = wx.StaticLine(self, wx.ID_ANY, pos=wx.DefaultPosition,
-                              size=wx.DefaultSize, style=wx.LI_HORIZONTAL,
-                              name=wx.StaticLineNameStr
-                              )
-        boxpresets.Add(line0, 0, wx.ALL | wx.EXPAND, 5)
-        boxpresets.Add((5, 5))
-        panelscr = scrolled.ScrolledPanel(self, -1, size=(200, 500),
-                                          style=wx.TAB_TRAVERSAL
-                                          | wx.BORDER_THEME,
-                                          name="panelscroll",
-                                          )
-        fgs1 = wx.BoxSizer(wx.VERTICAL)
-        self.btn_newpreset = wx.Button(panelscr, wx.ID_ANY,
-                                       _("New"), size=(-1, -1))
-        fgs1.Add(self.btn_newpreset, 0, wx.ALL | wx.EXPAND, 5)
-        self.btn_delpreset = wx.Button(panelscr, wx.ID_ANY,
-                                       _("Remove"), size=(-1, -1))
-        fgs1.Add(self.btn_delpreset, 0, wx.ALL | wx.EXPAND, 5)
-        line1 = wx.StaticLine(panelscr, wx.ID_ANY, pos=wx.DefaultPosition,
-                              size=wx.DefaultSize, style=wx.LI_HORIZONTAL,
-                              name=wx.StaticLineNameStr
-                              )
-        fgs1.Add((5, 5))
-        fgs1.Add(line1, 0, wx.ALL | wx.EXPAND, 5)
-        fgs1.Add((5, 5))
-        self.btn_savecopy = wx.Button(panelscr, wx.ID_ANY,
-                                      _("Export selected"), size=(-1, -1))
-        fgs1.Add(self.btn_savecopy, 0, wx.ALL | wx.EXPAND, 5)
-        self.btn_saveall = wx.Button(panelscr, wx.ID_ANY,
-                                     _("Export all..."), size=(-1, -1))
-        fgs1.Add(self.btn_saveall, 0, wx.ALL | wx.EXPAND, 5)
+        # line0 = wx.StaticLine(self, wx.ID_ANY, pos=wx.DefaultPosition,
+        #                       size=wx.DefaultSize, style=wx.LI_HORIZONTAL,
+        #                       name=wx.StaticLineNameStr
+        #                       )
+        # boxpresets.Add(line0, 0, wx.ALL | wx.EXPAND, 5)
+        # boxpresets.Add((5, 5))
+        # panelscr = scrolled.ScrolledPanel(self, -1, size=(200, 500),
+        #                                   style=wx.TAB_TRAVERSAL
+        #                                   | wx.BORDER_THEME,
+        #                                   name="panelscroll",
+        #                                   )
+        # fgs1 = wx.BoxSizer(wx.VERTICAL)
+        # self.btn_newpreset = wx.Button(panelscr, wx.ID_ANY,
+        #                                _("New"), size=(-1, -1))
+        # fgs1.Add(self.btn_newpreset, 0, wx.ALL | wx.EXPAND, 5)
+        # self.btn_delpreset = wx.Button(panelscr, wx.ID_ANY,
+        #                                _("Remove"), size=(-1, -1))
+        # fgs1.Add(self.btn_delpreset, 0, wx.ALL | wx.EXPAND, 5)
+        # line1 = wx.StaticLine(panelscr, wx.ID_ANY, pos=wx.DefaultPosition,
+        #                       size=wx.DefaultSize, style=wx.LI_HORIZONTAL,
+        #                       name=wx.StaticLineNameStr
+        #                       )
+        # fgs1.Add((5, 5))
+        # fgs1.Add(line1, 0, wx.ALL | wx.EXPAND, 5)
+        # fgs1.Add((5, 5))
+        # self.btn_savecopy = wx.Button(panelscr, wx.ID_ANY,
+        #                               _("Export selected"), size=(-1, -1))
+        # fgs1.Add(self.btn_savecopy, 0, wx.ALL | wx.EXPAND, 5)
+        # self.btn_saveall = wx.Button(panelscr, wx.ID_ANY,
+        #                              _("Export all..."), size=(-1, -1))
+        # fgs1.Add(self.btn_saveall, 0, wx.ALL | wx.EXPAND, 5)
 
-        line2 = wx.StaticLine(panelscr, wx.ID_ANY, pos=wx.DefaultPosition,
-                              size=wx.DefaultSize, style=wx.LI_HORIZONTAL,
-                              name=wx.StaticLineNameStr
-                              )
-        fgs1.Add((5, 5))
-        fgs1.Add(line2, 0, wx.ALL | wx.EXPAND, 5)
-        fgs1.Add((5, 5))
-        self.btn_restore = wx.Button(panelscr, wx.ID_ANY,
-                                     _("Import preset"), size=(-1, -1))
-        fgs1.Add(self.btn_restore, 0, wx.ALL | wx.EXPAND, 5)
-        self.btn_restoreall = wx.Button(panelscr, wx.ID_ANY,
-                                        _("Import group"), size=(-1, -1))
-        fgs1.Add(self.btn_restoreall, 0, wx.ALL | wx.EXPAND, 5)
+        # line2 = wx.StaticLine(panelscr, wx.ID_ANY, pos=wx.DefaultPosition,
+        #                       size=wx.DefaultSize, style=wx.LI_HORIZONTAL,
+        #                       name=wx.StaticLineNameStr
+        #                       )
+        # fgs1.Add((5, 5))
+        # fgs1.Add(line2, 0, wx.ALL | wx.EXPAND, 5)
+        # fgs1.Add((5, 5))
+        # self.btn_restore = wx.Button(panelscr, wx.ID_ANY,
+        #                              _("Import preset"), size=(-1, -1))
+        # fgs1.Add(self.btn_restore, 0, wx.ALL | wx.EXPAND, 5)
+        # self.btn_restoreall = wx.Button(panelscr, wx.ID_ANY,
+        #                                 _("Import group"), size=(-1, -1))
+        # fgs1.Add(self.btn_restoreall, 0, wx.ALL | wx.EXPAND, 5)
 
-        line3 = wx.StaticLine(panelscr, wx.ID_ANY, pos=wx.DefaultPosition,
-                              size=wx.DefaultSize, style=wx.LI_HORIZONTAL,
-                              name=wx.StaticLineNameStr
-                              )
-        fgs1.Add((5, 5))
-        fgs1.Add(line3, 0, wx.ALL | wx.EXPAND, 5)
-        fgs1.Add((5, 5))
-        self.btn_restoredef = wx.Button(panelscr, wx.ID_ANY,
-                                        _("Restore"), size=(-1, -1))
-        fgs1.Add(self.btn_restoredef, 0, wx.ALL | wx.EXPAND, 5)
+        # line3 = wx.StaticLine(panelscr, wx.ID_ANY, pos=wx.DefaultPosition,
+        #                       size=wx.DefaultSize, style=wx.LI_HORIZONTAL,
+        #                       name=wx.StaticLineNameStr
+        #                       )
+        # fgs1.Add((5, 5))
+        # fgs1.Add(line3, 0, wx.ALL | wx.EXPAND, 5)
+        # fgs1.Add((5, 5))
+        # self.btn_restoredef = wx.Button(panelscr, wx.ID_ANY,
+        #                                 _("Restore"), size=(-1, -1))
+        # fgs1.Add(self.btn_restoredef, 0, wx.ALL | wx.EXPAND, 5)
 
-        self.btn_restorealldefault = wx.Button(panelscr, wx.ID_ANY,
-                                               _("Restore all..."),
-                                               size=(-1, -1)
-                                               )
-        fgs1.Add(self.btn_restorealldefault, 0, wx.ALL | wx.EXPAND, 5)
-        line4 = wx.StaticLine(panelscr, wx.ID_ANY, pos=wx.DefaultPosition,
-                              size=wx.DefaultSize, style=wx.LI_HORIZONTAL,
-                              name=wx.StaticLineNameStr
-                              )
-        fgs1.Add((5, 5))
-        fgs1.Add(line4, 0, wx.ALL | wx.EXPAND, 5)
-        fgs1.Add((5, 5))
-        self.btn_refresh = wx.Button(panelscr, wx.ID_ANY,
-                                     _("Reload"), size=(-1, -1))
-        fgs1.Add(self.btn_refresh, 0, wx.ALL | wx.EXPAND, 5)
-        boxpresets.Add(panelscr, 0, wx.ALL | wx.CENTRE, 5)
-        panelscr.SetSizer(fgs1)
-        panelscr.SetAutoLayout(1)
-        panelscr.SetupScrolling()
+        # self.btn_restorealldefault = wx.Button(panelscr, wx.ID_ANY,
+        #                                        _("Restore all..."),
+        #                                        size=(-1, -1)
+        #                                        )
+        # fgs1.Add(self.btn_restorealldefault, 0, wx.ALL | wx.EXPAND, 5)
+        # line4 = wx.StaticLine(panelscr, wx.ID_ANY, pos=wx.DefaultPosition,
+        #                       size=wx.DefaultSize, style=wx.LI_HORIZONTAL,
+        #                       name=wx.StaticLineNameStr
+        #                       )
+        # fgs1.Add((5, 5))
+        # fgs1.Add(line4, 0, wx.ALL | wx.EXPAND, 5)
+        # fgs1.Add((5, 5))
+        # self.btn_refresh = wx.Button(panelscr, wx.ID_ANY,
+        #                              _("Reload"), size=(-1, -1))
+        # fgs1.Add(self.btn_refresh, 0, wx.ALL | wx.EXPAND, 5)
+        # boxpresets.Add(panelscr, 0, wx.ALL | wx.CENTRE, 5)
+        # panelscr.SetSizer(fgs1)
+        # panelscr.SetAutoLayout(1)
+        # panelscr.SetupScrolling()
         # ------ LIST CONTROL & BOX PROFILES
         # --- listctrl
         self.lctrl = wx.ListCtrl(self, wx.ID_ANY,
@@ -206,31 +206,31 @@ class PrstPan(wx.Panel):
         boxprofiles.Add(self.lctrl, 1, wx.ALL | wx.EXPAND, 5)
         # --- profile buttons
         grid_profiles = wx.FlexGridSizer(0, 4, 0, 5)
-        self.btn_newprofile = wx.Button(self, wx.ID_ANY,
-                                        _("Add"), size=(-1, -1))
-        self.btn_newprofile.SetBitmap(bmpnewprf, wx.LEFT)
-        grid_profiles.Add(self.btn_newprofile, 0, wx.ALL, 0)
-        self.btn_delprofile = wx.Button(self, wx.ID_ANY,
-                                        _("Delete"), size=(-1, -1))
-        self.btn_delprofile.SetBitmap(bmpdelprf, wx.LEFT)
-        self.btn_delprofile.Disable()
-        grid_profiles.Add(self.btn_delprofile, 0, wx.ALL, 0)
-        self.btn_editprofile = wx.Button(self, wx.ID_ANY,
-                                         _("Edit"), size=(-1, -1))
-        self.btn_editprofile.SetBitmap(bmpeditprf, wx.LEFT)
-        self.btn_editprofile.Disable()
-        grid_profiles.Add(self.btn_editprofile, 0, wx.ALL, 0)
-        self.btn_copyprofile = wx.Button(self, wx.ID_ANY,
-                                         _("Duplicate"), size=(-1, -1))
-        self.btn_copyprofile.SetBitmap(bmpcopyprf, wx.LEFT)
-        self.btn_copyprofile.Disable()
-        grid_profiles.Add(self.btn_copyprofile, 0, wx.ALL, 0)
+        # self.btn_newprofile = wx.Button(self, wx.ID_ANY,
+        #                                _("Add"), size=(-1, -1))
+        # self.btn_newprofile.SetBitmap(bmpnewprf, wx.LEFT)
+        # grid_profiles.Add(self.btn_newprofile, 0, wx.ALL, 0)
+        # self.btn_delprofile = wx.Button(self, wx.ID_ANY,
+        #                                 _("Delete"), size=(-1, -1))
+        # self.btn_delprofile.SetBitmap(bmpdelprf, wx.LEFT)
+        # self.btn_delprofile.Disable()
+        # grid_profiles.Add(self.btn_delprofile, 0, wx.ALL, 0)
+        # self.btn_editprofile = wx.Button(self, wx.ID_ANY,
+        #                                  _("Edit"), size=(-1, -1))
+        # self.btn_editprofile.SetBitmap(bmpeditprf, wx.LEFT)
+        # self.btn_editprofile.Disable()
+        # grid_profiles.Add(self.btn_editprofile, 0, wx.ALL, 0)
+        # self.btn_copyprofile = wx.Button(self, wx.ID_ANY,
+        #                                  _("Duplicate"), size=(-1, -1))
+        # self.btn_copyprofile.SetBitmap(bmpcopyprf, wx.LEFT)
+        # self.btn_copyprofile.Disable()
+        #grid_profiles.Add(self.btn_copyprofile, 0, wx.ALL, 0)
         boxprofiles.Add(grid_profiles, 0, wx.ALL, 5)
         sizer_div.Add(boxprofiles, 1, wx.ALL | wx.EXPAND, 5)
         # ------- command line
         grd_cmd = wx.BoxSizer(wx.HORIZONTAL)
         sizer_base.Add(grd_cmd, 0, wx.EXPAND)
-        sbox = wx.StaticBox(self, wx.ID_ANY, _("One-Pass"))
+        sbox = wx.StaticBox(self, wx.ID_ANY, _("Conversion Passes [ffmpeg args, suffix]"))
         box_cmd1 = wx.StaticBoxSizer(sbox, wx.VERTICAL)
         grd_cmd.Add(box_cmd1, 1, wx.ALL | wx.EXPAND, 5)
         self.txt_1cmd = wx.TextCtrl(self, wx.ID_ANY, "",
@@ -239,73 +239,73 @@ class PrstPan(wx.Panel):
                                     )
         box_cmd1.Add(self.txt_1cmd, 1, wx.ALL | wx.EXPAND, 5)
 
-        box_cmd2 = wx.StaticBoxSizer(wx.StaticBox(self, wx.ID_ANY,
-                                                  _("Two-Pass")), wx.VERTICAL
-                                     )
-        grd_cmd.Add(box_cmd2, 1, wx.ALL | wx.EXPAND, 5)
-        self.txt_2cmd = wx.TextCtrl(self, wx.ID_ANY, "",
-                                    size=(-1, 120), style=wx.TE_MULTILINE
-                                    | wx.TE_PROCESS_ENTER,
-                                    )
-        box_cmd2.Add(self.txt_2cmd, 1, wx.ALL | wx.EXPAND, 5)
+        # box_cmd2 = wx.StaticBoxSizer(wx.StaticBox(self, wx.ID_ANY,
+        #                                           _("Two-Pass")), wx.VERTICAL
+        #                              )
+        # grd_cmd.Add(box_cmd2, 1, wx.ALL | wx.EXPAND, 5)
+        # self.txt_2cmd = wx.TextCtrl(self, wx.ID_ANY, "",
+        #                             size=(-1, 120), style=wx.TE_MULTILINE
+        #                             | wx.TE_PROCESS_ENTER,
+        #                             )
+        # box_cmd2.Add(self.txt_2cmd, 1, wx.ALL | wx.EXPAND, 5)
         self.SetSizer(sizer_base)
         self.Layout()
 
         # ----------------------Set Properties----------------------#
         if self.appdata['ostype'] == 'Darwin':
             self.txt_1cmd.SetFont(wx.Font(10, wx.MODERN, wx.NORMAL, wx.BOLD))
-            self.txt_2cmd.SetFont(wx.Font(10, wx.MODERN, wx.NORMAL, wx.BOLD))
+            # self.txt_2cmd.SetFont(wx.Font(10, wx.MODERN, wx.NORMAL, wx.BOLD))
         else:
             self.txt_1cmd.SetFont(wx.Font(8, wx.MODERN, wx.NORMAL, wx.BOLD))
-            self.txt_2cmd.SetFont(wx.Font(8, wx.MODERN, wx.NORMAL, wx.BOLD))
+            # self.txt_2cmd.SetFont(wx.Font(8, wx.MODERN, wx.NORMAL, wx.BOLD))
 
         # ------- tipips
         self.cmbx_prst.SetToolTip(_("Choose a preset and view its profiles"))
-        tip = _("Create a new profile and save it in the selected preset")
-        self.btn_newprofile.SetToolTip(tip)
-        self.btn_delprofile.SetToolTip(_("Delete the selected profile"))
-        self.btn_editprofile.SetToolTip(_("Edit the selected profile"))
-        tip = _("Create a new preset")
-        self.btn_newpreset.SetToolTip(tip)
-        tip = _("Remove the selected preset from the Presets Manager")
-        self.btn_delpreset.SetToolTip(tip)
-        tip = _("Export selected preset as copy")
-        self.btn_savecopy.SetToolTip(tip)
-        tip = _("Export entire presets folder as copy")
-        self.btn_saveall.SetToolTip(tip)
-        tip = _("Import a new preset or update an existing one")
-        self.btn_restore.SetToolTip(tip)
-        tip = (_("Import a group of presets from a folder and update "
-                 "existing ones"))
-        self.btn_restoreall.SetToolTip(tip)
-        tip = _("Replace the selected preset with the Videomass default one")
-        self.btn_restoredef.SetToolTip(tip)
-        tip = _("Retrieve all Videomass default presets")
-        self.btn_restorealldefault.SetToolTip(tip)
-        self.btn_refresh.SetToolTip(_("Update the presets list"))
-        tip = _('First pass of the selected profile')
-        self.txt_1cmd.SetToolTip(tip)
-        tip = _('Second pass of the selected profile')
-        self.txt_2cmd.SetToolTip(tip)
+        # tip = _("Create a new profile and save it in the selected preset")
+        # self.btn_newprofile.SetToolTip(tip)
+        # self.btn_delprofile.SetToolTip(_("Delete the selected profile"))
+        # self.btn_editprofile.SetToolTip(_("Edit the selected profile"))
+        # tip = _("Create a new preset")
+        # self.btn_newpreset.SetToolTip(tip)
+        # tip = _("Remove the selected preset from the Presets Manager")
+        # self.btn_delpreset.SetToolTip(tip)
+        # tip = _("Export selected preset as copy")
+        # self.btn_savecopy.SetToolTip(tip)
+        # tip = _("Export entire presets folder as copy")
+        # self.btn_saveall.SetToolTip(tip)
+        # tip = _("Import a new preset or update an existing one")
+        # self.btn_restore.SetToolTip(tip)
+        # tip = (_("Import a group of presets from a folder and update "
+        #          "existing ones"))
+        # self.btn_restoreall.SetToolTip(tip)
+        # tip = _("Replace the selected preset with the Videomass default one")
+        # self.btn_restoredef.SetToolTip(tip)
+        # tip = _("Retrieve all Videomass default presets")
+        # self.btn_restorealldefault.SetToolTip(tip)
+        # self.btn_refresh.SetToolTip(_("Update the presets list"))
+        # tip = _('First pass of the selected profile')
+        # self.txt_1cmd.SetToolTip(tip)
+        # tip = _('Second pass of the selected profile')
+        # self.txt_2cmd.SetToolTip(tip)
 
         # ----------------------Binder (EVT)----------------------#
         self.Bind(wx.EVT_COMBOBOX, self.on_preset_selection, self.cmbx_prst)
-        self.Bind(wx.EVT_BUTTON, self.profile_add, self.btn_newprofile)
-        self.Bind(wx.EVT_BUTTON, self.profile_del, self.btn_delprofile)
-        self.Bind(wx.EVT_BUTTON, self.profile_edit, self.btn_editprofile)
-        self.Bind(wx.EVT_BUTTON, self.profile_copy, self.btn_copyprofile)
+        # self.Bind(wx.EVT_BUTTON, self.profile_add, self.btn_newprofile)
+        # self.Bind(wx.EVT_BUTTON, self.profile_del, self.btn_delprofile)
+        # self.Bind(wx.EVT_BUTTON, self.profile_edit, self.btn_editprofile)
+        # self.Bind(wx.EVT_BUTTON, self.profile_copy, self.btn_copyprofile)
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.on_select, self.lctrl)
         self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.on_deselect, self.lctrl)
-        self.Bind(wx.EVT_BUTTON, self.preset_new, self.btn_newpreset)
-        self.Bind(wx.EVT_BUTTON, self.preset_del, self.btn_delpreset)
-        self.Bind(wx.EVT_BUTTON, self.preset_export, self.btn_savecopy)
-        self.Bind(wx.EVT_BUTTON, self.preset_export_all, self.btn_saveall)
-        self.Bind(wx.EVT_BUTTON, self.preset_import, self.btn_restore)
-        self.Bind(wx.EVT_BUTTON, self.preset_default, self.btn_restoredef)
-        self.Bind(wx.EVT_BUTTON, self.preset_import_all, self.btn_restoreall)
-        self.Bind(wx.EVT_BUTTON, self.preset_default_all,
-                  self.btn_restorealldefault)
-        self.Bind(wx.EVT_BUTTON, self.presets_refresh, self.btn_refresh)
+        # self.Bind(wx.EVT_BUTTON, self.preset_new, self.btn_newpreset)
+        # self.Bind(wx.EVT_BUTTON, self.preset_del, self.btn_delpreset)
+        # self.Bind(wx.EVT_BUTTON, self.preset_export, self.btn_savecopy)
+        # self.Bind(wx.EVT_BUTTON, self.preset_export_all, self.btn_saveall)
+        # self.Bind(wx.EVT_BUTTON, self.preset_import, self.btn_restore)
+        # self.Bind(wx.EVT_BUTTON, self.preset_default, self.btn_restoredef)
+        # self.Bind(wx.EVT_BUTTON, self.preset_import_all, self.btn_restoreall)
+        # self.Bind(wx.EVT_BUTTON, self.preset_default_all,
+        #           self.btn_restorealldefault)
+        # self.Bind(wx.EVT_BUTTON, self.presets_refresh, self.btn_refresh)
 
         # ---------------------------- defaults
         self.cmbx_prst.SetSelection(0),
@@ -377,7 +377,7 @@ class PrstPan(wx.Panel):
 
         self.lctrl.ClearAll()
         self.txt_1cmd.SetValue("")
-        self.txt_2cmd.SetValue("")
+        # self.txt_2cmd.SetValue("")
 
         if self.array:
             del self.array[0:6]
@@ -433,11 +433,11 @@ class PrstPan(wx.Panel):
         """
         if cleardata:
             self.txt_1cmd.SetValue("")
-            self.txt_2cmd.SetValue("")
+            # self.txt_2cmd.SetValue("")
             del self.array[0:6]  # delete all: [0],[1],[2],[3],[4],[5]
-        self.btn_copyprofile.Disable()
-        self.btn_delprofile.Disable()
-        self.btn_editprofile.Disable()
+        # self.btn_copyprofile.Disable()
+        # self.btn_delprofile.Disable()
+        # self.btn_editprofile.Disable()
         self.parent.statusbar_msg("", None)
     # ------------------------------------------------------------------#
 
@@ -452,10 +452,10 @@ class PrstPan(wx.Panel):
         collections = json_data(path)
         selected = event.GetText()  # event.GetText is a Name Profile
         self.txt_1cmd.SetValue("")
-        self.txt_2cmd.SetValue("")
-        self.btn_copyprofile.Enable()
-        self.btn_delprofile.Enable()
-        self.btn_editprofile.Enable()
+        # self.txt_2cmd.SetValue("")
+        # self.btn_copyprofile.Enable()
+        # self.btn_delprofile.Enable()
+        # self.btn_editprofile.Enable()
         del self.array[0:6]  # delete all: [0],[1],[2],[3],[4],[5]
 
         try:
@@ -463,8 +463,7 @@ class PrstPan(wx.Panel):
                 if selected == name["Name"]:  # profile name
                     self.array.append(name["Name"])
                     self.array.append(name["Description"])
-                    self.array.append(name["First_pass"])
-                    self.array.append(name["Second_pass"])
+                    self.array.append(name["Passes"])
                     self.array.append(name["Supported_list"])
                     self.array.append(name["Output_extension"])
 
@@ -474,13 +473,26 @@ class PrstPan(wx.Panel):
                           "Videomass", wx.ICON_ERROR, self)
             return
 
-        self.txt_1cmd.AppendText(f'{self.array[2]}')  # cmd1 text ctrl
-        if self.array[3]:
-            self.txt_2cmd.Enable()
-            self.txt_2cmd.AppendText(f'{self.array[3]}')  # cmd2 text ctrl
-        else:
-            self.txt_2cmd.Disable()
+        if self.array[2]:            
+            if hasattr(self.array[3],"__len__"):
+                # self.txt_2cmd.Enable()
+                # for item in self.array[2]:
+                #     self.txt_1cmd.AppendText(f'{item},\n')  # cmd1 text ctrl
+                
+                passText = pprint.pformat(self.array[2], width=120) # I'm lazy. Going to pay for it right now, though.
 
+                passText = passText.replace("['","[\"")
+                passText = passText.replace("']","\"]")
+                passText = passText.replace(",'",",\"")
+                passText = passText.replace("',","\",")
+                passText = passText.replace(", '",", \"") # This is silly. I need to do this to recreate json formatting for later re-datastructification.
+                passText = passText.replace("', ","\", ") # The threat is that the JSON decoder will freak out of there are single quotes leading a string.
+
+                self.txt_1cmd.AppendText(passText)
+                                                        
+                                                        
+        # self.txt_2cmd.Disable()
+        
         sel = f'{self.cmbx_prst.GetValue()} - {self.array[0]}'
         self.parent.statusbar_msg(sel, None)
     # ------------------------------------------------------------------#
@@ -826,33 +838,36 @@ class PrstPan(wx.Panel):
                                       PrstPan.YELLOW, PrstPan.BLACK)
             return
 
-        if (self.array[2].strip() != self.txt_1cmd.GetValue().strip()
-                or self.array[3].strip() != self.txt_2cmd.GetValue().strip()):
-            if self.txtcmdedited:
+        argArray = self.array[2]
+        
 
-                msg = _("The selected profile command has been "
-                        "changed manually.\n"
-                        "Do you want to apply it "
-                        "during the conversion process?")
-                dlg = wx.RichMessageDialog(self, msg,
-                                           _("Please confirm"),
-                                           wx.ICON_QUESTION
-                                           | wx.CANCEL
-                                           | wx.YES_NO,
-                                           )
-                dlg.ShowCheckBox(_("Don't show this dialog again"))
+        # if (self.array[2].strip() != self.txt_1cmd.GetValue().strip()
+        #         or self.array[3].strip() != self.txt_2cmd.GetValue().strip()):
+        #     if self.txtcmdedited:
 
-                if dlg.ShowModal() != wx.ID_YES:
-                    if dlg.IsCheckBoxChecked():
-                        # make sure we won't show it again the next time
-                        self.txtcmdedited = False
-                    return
-                if dlg.IsCheckBoxChecked():
-                    # make sure we won't show it again the next time
-                    self.txtcmdedited = False
+        #         msg = _("The selected profile command has been "
+        #                 "changed manually.\n"
+        #                 "Do you want to apply it "
+        #                 "during the conversion process?")
+        #         dlg = wx.RichMessageDialog(self, msg,
+        #                                    _("Please confirm"),
+        #                                    wx.ICON_QUESTION
+        #                                    | wx.CANCEL
+        #                                    | wx.YES_NO,
+        #                                    )
+        #         dlg.ShowCheckBox(_("Don't show this dialog again"))
 
-        outext = '' if self.array[5] == 'copy' else self.array[5]
-        extlst = self.array[4]
+        #         if dlg.ShowModal() != wx.ID_YES:
+        #             if dlg.IsCheckBoxChecked():
+        #                 # make sure we won't show it again the next time
+        #                 self.txtcmdedited = False
+        #             return
+        #         if dlg.IsCheckBoxChecked():
+        #             # make sure we won't show it again the next time
+        #             self.txtcmdedited = False
+
+        outext = '' if self.array[4] == 'copy' else self.array[4]
+        extlst = self.array[3]
         file_src = supported_formats(extlst, self.parent.file_src)
         checking = check_files(file_src,
                                self.parent.outputpath,
@@ -866,11 +881,7 @@ class PrstPan(wx.Panel):
             return
         fsrc, fdest = checking
 
-        if self.array[3]:  # has double pass
-            self.two_Pass(fsrc, fdest, outext)
-
-        else:
-            self.one_Pass(fsrc, fdest, outext)
+        self.one_Pass(fsrc, fdest, outext)
     # ----------------------------------------------------------------#
 
     def one_Pass(self, filesrc, filedest, outext):
@@ -898,11 +909,12 @@ class PrstPan(wx.Panel):
     # ------------------------------------------------------------------#
 
     def two_Pass(self, filesrc, filedest, outext):
+        return # We're never going to use this.
         """
         Build args string for two pass process
         """
         pass1 = " ".join(self.txt_1cmd.GetValue().split())
-        pass2 = " ".join(self.txt_2cmd.GetValue().split())
+        # pass2 = " ".join(self.txt_2cmd.GetValue().split())
         typeproc = 'twopass'
         valupdate = self.update_dict(len(filesrc), typeproc)
         ending = Formula(self, valupdate[0], valupdate[1], (600, 170),
@@ -940,6 +952,6 @@ class PrstPan(wx.Panel):
         formula = (_("Queued File\nPass Encoding"
                      "\nProfile Used\nOutput Format\nTime Period"))
         dictions = (f"{numfile}\n{passes}\n"
-                    f"{self.array[0]}\n{self.array[5]}\n{time}"
+                    f"{self.array[0]}\n{self.array[4]}\n{time}"
                     )
         return formula, dictions

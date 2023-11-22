@@ -65,12 +65,11 @@ def json_data(arg):
     type object from getting data using `json` module in the following
     form:
 
-    [{"Name": "",
-      "Descritpion": "",
-      "First_pass": "",
-      "Second_pass": "",
-      "Supported_list": "",
-      "Output_extension": ""
+    [{'Name': "",
+    "Description": "",
+    "Passes": [["ffmpeg args","suffix","TODO Subdirectory"]],
+    "Supported_list": "",
+    "Output_extension": "",
     }]
 
     """
@@ -180,8 +179,9 @@ def edit_existing_profile(path_prst, selected_profile, **kwargs):
         if item["Name"] == selected_profile:
             item["Name"] = kwargs['Name']
             item["Description"] = kwargs['Description']
-            item["First_pass"] = kwargs['First_pass']
-            item["Second_pass"] = kwargs['Second_pass']
+            item["Passes"] = kwargs['First_pass']
+            item["Suffixes"] = kwargs['Suffixes']
+            item["Subfolders"] = kwargs['Subfolders']
             item["Supported_list"] = kwargs['Supported_list']
             item["Output_extension"] = kwargs['Output_extension']
 

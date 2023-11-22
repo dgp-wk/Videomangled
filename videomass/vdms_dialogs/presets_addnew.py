@@ -27,6 +27,7 @@ This file is part of Videomass.
 import os
 import webbrowser
 import wx
+import pprint
 from videomass.vdms_io.presets_manager_prop import write_new_profile
 from videomass.vdms_io.presets_manager_prop import edit_existing_profile
 
@@ -170,7 +171,7 @@ class MemPresets(wx.Dialog):
 
         # -------------------Binder (EVT) End --------------------#
         if arg == 'edit':
-            self.array[5] = '' if array[5] == 'copy' else array[5]
+            self.array[4] = '' if array[4] == 'copy' else array[4]
             self.change()
         elif arg == 'addprofile':
             self.pass_1_cmd.AppendText(self.array[0])  # command or param
@@ -184,10 +185,14 @@ class MemPresets(wx.Dialog):
         """
         self.txt_name.AppendText(self.array[0])  # name
         self.txt_descript.AppendText(self.array[1])  # descript
-        self.pass_1_cmd.AppendText(self.array[2])  # command 1
-        self.pass_2_cmd.AppendText(self.array[3])  # command 2
-        self.txt_supp.AppendText(self.array[4])  # file supportted
-        self.txt_ext.AppendText(self.array[5])  # extension
+        self.txt_supp.AppendText(self.array[3])  # file supportted
+        self.txt_ext.AppendText(self.array[4])  # extension
+        
+
+        if hasattr(self.array[2],"__len__"):
+            self.pass_1_cmd.AppendText( pprint.pformat(self.array[2], width=100).replace("'","\"")) # Eugh.
+        else:
+            self.pass_1_cmd.AppendText(self.array[2])
 
 # ---------------------Callback (event handler)----------------------#
 

@@ -26,6 +26,7 @@ This file is part of Videomass.
 """
 from threading import Thread
 import time
+import json
 import itertools
 import subprocess
 import platform
@@ -66,6 +67,7 @@ class OnePass(Thread):
         self.countmax = len(args[1])  # length file list
         self.logname = logname  # title name of file log
         self.time_seq = timeseq  # a time segment
+        self.out_extension = args[2]
 
         Thread.__init__(self)
 
@@ -75,6 +77,22 @@ class OnePass(Thread):
         """
         Thread started.
         """
+        try:
+            self.command = json.loads(self.command)
+            
+        except json.decoder.JSONDecodeError as err:
+            msg = _('You dun goofed with that there preset you got there. '
+                    'Make sure it is formatted as:\n'
+                    '[["ffmpeg command", "Suffix"],\n'
+                    '["ffmpeg command", "Suffix"],\n'
+                    '...]\nYou sent this:\n')
+            wx.MessageBox('\nERROR: {0}\n{1}\n{2}'.format(err, msg,self.command),
+                      ("Videomass"), wx.ICON_ERROR | wx.OK, None)
+
+            return 'error'
+        
+        self.countmax *= len(self.command)
+
         filedone = []
         for (infile,
              outfile,
@@ -86,84 +104,91 @@ class OnePass(Thread):
                                                 fillvalue='',
                                                 ):
 
-            cmd = (f'"{OnePass.appdata["ffmpeg_cmd"]}" {self.time_seq} '
-                   f'{OnePass.appdata["ffmpegloglev"]} '
-                   f'{OnePass.appdata["ffmpeg+params"]} -i '
-                   f'"{infile}" {self.command} {volume} '
-                   f'{OnePass.appdata["ffthreads"]} -y "{outfile}"')
+            for command in self.command:
+                ffmpegCommand = command[0]
+                suffix = command[1]
+                #subfolder = command[2]
+                
+                outputName = outfile.replace(f'.{self.out_extension}',f'{suffix}.{self.out_extension}')
 
-            self.count += 1
-            count = f'File {self.count}/{self.countmax}'
-            com = (f'{count}\nSource: "{infile}"\nDestination: "{outfile}"'
-                   f'\n\n[COMMAND]:\n{cmd}')
+                cmd = (f'"{OnePass.appdata["ffmpeg_cmd"]}" {self.time_seq} '
+                       f'{OnePass.appdata["ffmpegloglev"]} '
+                       f'{OnePass.appdata["ffmpeg+params"]} -i '
+                       f'"{infile}" {ffmpegCommand} {volume} '
+                       f'{OnePass.appdata["ffthreads"]} -y "{outputName}"')
 
-            wx.CallAfter(pub.sendMessage,
-                         "COUNT_EVT",
-                         count=count,
-                         fsource=f'Source:  "{infile}"',
-                         destination=f'Destination:  "{outfile}"',
-                         duration=duration,
-                         end='',
-                         )
-            logwrite(com, '', self.logname)  # write n/n + command only
+                self.count += 1
+                count = f'File {self.count}/{self.countmax}'
+                com = (f'{count}\nSource: "{infile}"\nDestination: "{outputName}"'
+                       f'\n\n[COMMAND]:\n{cmd}')
 
-            if not platform.system() == 'Windows':
-                cmd = shlex.split(cmd)
-
-            try:
-                with Popen(cmd,
-                           stderr=subprocess.PIPE,
-                           bufsize=1,
-                           universal_newlines=True,
-                           encoding='utf8',
-                           ) as proc:
-                    for line in proc.stderr:
-                        wx.CallAfter(pub.sendMessage,
-                                     "UPDATE_EVT",
-                                     output=line,
-                                     duration=duration,
-                                     status=0,
-                                     )
-                        if self.stop_work_thread:
-                            proc.terminate()
-                            break  # break second 'for' loop
-
-                    if proc.wait():  # error
-                        wx.CallAfter(pub.sendMessage,
-                                     "UPDATE_EVT",
-                                     output='',
-                                     duration=duration,
-                                     status=proc.wait(),
-                                     )
-                        logwrite('',
-                                 f"Exit status: {proc.wait()}",
-                                 self.logname,
-                                 )  # append exit error number
-                    else:  # ok
-                        filedone.append(infile)
-                        wx.CallAfter(pub.sendMessage,
-                                     "COUNT_EVT",
-                                     count='',
-                                     fsource='',
-                                     destination='',
-                                     duration=duration,
-                                     end='Done'
-                                     )
-            except (OSError, FileNotFoundError) as err:
-                excepterr = f"{err}\n  {OnePass.NOT_EXIST_MSG}"
                 wx.CallAfter(pub.sendMessage,
                              "COUNT_EVT",
-                             count=excepterr,
-                             fsource='',
-                             destination='',
-                             duration=0,
-                             end='error',
+                             count=count,
+                             fsource=f'Source:  "{infile}"',
+                             destination=f'Destination:  "{outputName}"',
+                             duration=duration,
+                             end='',
                              )
-                break
+                logwrite(com, '', self.logname)  # write n/n + command only
 
-            if self.stop_work_thread:
-                proc.terminate()
-                break  # break second 'for' loop
+                if not platform.system() == 'Windows':
+                    cmd = shlex.split(cmd)
+
+                try:
+                    with Popen(cmd,
+                               stderr=subprocess.PIPE,
+                               bufsize=1,
+                               universal_newlines=True,
+                               encoding='utf8',
+                               ) as proc:
+                        for line in proc.stderr:
+                            wx.CallAfter(pub.sendMessage,
+                                         "UPDATE_EVT",
+                                         output=line,
+                                         duration=duration,
+                                         status=0,
+                                         )
+                            if self.stop_work_thread:
+                                proc.terminate()
+                                break  # break second 'for' loop
+
+                        if proc.wait():  # error
+                            wx.CallAfter(pub.sendMessage,
+                                         "UPDATE_EVT",
+                                         output='',
+                                         duration=duration,
+                                         status=proc.wait(),
+                                         )
+                            logwrite('',
+                                     f"Exit status: {proc.wait()}",
+                                     self.logname,
+                                     )  # append exit error number
+                        else:  # ok
+                            filedone.append(infile)
+                            wx.CallAfter(pub.sendMessage,
+                                         "COUNT_EVT",
+                                         count='',
+                                         fsource='',
+                                         destination='',
+                                         duration=duration,
+                                         end='Done'
+                                         )
+                except (OSError, FileNotFoundError) as err:
+                    excepterr = f"{err}\n  {OnePass.NOT_EXIST_MSG}"
+                    wx.CallAfter(pub.sendMessage,
+                                 "COUNT_EVT",
+                                 count=excepterr,
+                                 fsource='',
+                                 destination='',
+                                 duration=0,
+                                 end='error',
+                                 )
+                    break
+
+                if self.stop_work_thread:
+                    proc.terminate()
+                    break  # break second 'for' loop
 
         time.sleep(.5)
         wx.CallAfter(pub.sendMessage, "END_EVT", msg=filedone)

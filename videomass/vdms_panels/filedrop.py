@@ -24,6 +24,7 @@ This file is part of Videomass.
    You should have received a copy of the GNU General Public License
    along with Videomass.  If not, see <http://www.gnu.org/licenses/>.
 """
+from decimal import DivisionByZero
 import os
 import re
 import wx
@@ -202,7 +203,10 @@ class MyListCtrl(wx.ListCtrl):
             if ('avg_frame_rate' in probe['streams'][0]):
                 fps = probe['streams'][0]['avg_frame_rate'].split("/")
                 if (len(fps) == 2):
-                    fps[0] = round(float(fps[0])/float(fps[1]),2) 
+                    try:
+                        fps[0] = round(float(fps[0])/float(fps[1]),2)
+                    except:
+                        fps[0] = round(float(fps[0]))
                     self.SetItem(self.index, 7, f'{fps[0]} fps')
                 else:
                     fps = probe['streams'][0]['avg_frame_rate']
